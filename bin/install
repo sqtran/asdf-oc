@@ -12,7 +12,7 @@ install_oc() {
     local install_path=$3
 
     case $(uname -s) in
-    Darwin) os="macos" ;;
+    Darwin) os="macosx" ;;
     *) os="linux" ;;
     esac
 
