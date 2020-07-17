@@ -1,4 +1,4 @@
-# asdf-minishift
+# asdf-oc
 
 ![CI](https://github.com/sqtran/asdf-oc/workflows/CI/badge.svg?branch=master)
 
@@ -14,4 +14,4 @@ asdf install oc latest
 
 ## Use
 
-Check the [asdf](https://github.com/asdf-vm/asdf) README for instructions on how to install and manage versions of Minishift.
+Check the [asdf](https://github.com/asdf-vm/asdf) README for instructions on how to install and manage versions of oc.
