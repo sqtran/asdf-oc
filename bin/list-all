@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+cmd="curl --silent --location"
+v3_releases_path="https://mirror.openshift.com/pub/openshift-v3/clients/"
+v4_releases_path="https://mirror.openshift.com/pub/openshift-v4/clients/oc/"
+
+# Combine v3 and v4 clients into a single list
+# The v3 list was getting a little out of hand, so I only return version that match the major.minor.patch naming convention
+# The v4 list is more manageable because the major.minor always points to the last build, which includes a hash in its version
+{ eval "$cmd $v3_releases_path" | grep -o "<a href=\"\([0-9]\+.[0-9]\+.[0-9]\+\)\+/\">"; eval "$cmd $v4_releases_path" | grep -o "<a href=\"\([0-9\.\-]\)\+/\">"; } | sed 's/<a href="//g' | sed 's/\/">//g' | sort -V | xargs

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -e
+
+#
+# https://mirror.openshift.com/pub/openshift-v4/clients/oc/
+# https://mirror.openshift.com/pub/openshift-v3/clients/
+#
+
+install_oc() {
+    local install_type=$1
+    local install_version=$2
+    local install_path=$3
+
+    case $(uname -s) in
+    Darwin) os="macos" ;;
+    *) os="linux" ;;
+    esac
+
+    case $(uname -m) in
+    x86_64) arch="amd64" ;;
+    *) arch="other" ;;
+    esac
+
+    if [ "$arch" = "other" ]; then
+        echo "Unsupported architecture $(uname -m). Only x64 binaries are available."
+        exit
+    fi
+
+    if [[ "$install_version" =~ (^[3].+) ]];
+    then
+        download="https://mirror.openshift.com/pub/openshift-v3/clients/${install_version}/${os}/oc.tar.gz"
+    elif [[ "$install_version" =~ (^[4].+)|(^latest$) ]];
+    then
+        download="https://mirror.openshift.com/pub/openshift-v4/clients/oc/${install_version}/${os}/oc.tar.gz"
+    else 
+        echo "Unknown version, only 3.x and 4.x are available."
+        exit 1
+    fi
+
+    if [ ! -d "${install_path}/bin" ]; then
+        mkdir -p "${install_path}/bin"
+    fi
+
+    curl -fL# -N "${download}" | tar -xz -C "${install_path}/bin"
+}
+
+install_oc $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
