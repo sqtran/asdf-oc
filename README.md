@@ -3,7 +3,7 @@
 ![CI](https://github.com/sqtran/asdf-oc/workflows/CI/badge.svg?branch=master)
 
 
-[oc](https://github.com/openshift/oc) plugin for [asdf](https://github.com/asdf-vm/asdf) version manager.
+[OpenShift Client CLI](https://github.com/openshift/oc) (oc) plugin for [asdf](https://github.com/asdf-vm/asdf) version manager.
 
 ## Install
 
