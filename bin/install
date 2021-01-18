@@ -29,11 +29,11 @@ install_oc() {
     if [[ "$install_version" =~ (^[3].+) ]];
     then
         download="https://mirror.openshift.com/pub/openshift-v3/clients/${install_version}/${os}/oc.tar.gz"
-    elif [[ "$install_version" =~ (^[4].+)|(^latest$) ]];
+    elif [[ "$install_version" =~ (^[4].+)|(^latest$)|(^(latest|stable|candidate|fast)-.+) ]];
     then
-        download="https://mirror.openshift.com/pub/openshift-v4/clients/oc/${install_version}/${os}/oc.tar.gz"
+        download="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${install_version}/openshift-client-${os}.tar.gz"
     else 
-        echo "Unknown version, only 3.x and 4.x are available."
+        echo "Unknown version, only 3.x, 4.x, stable-4.x, latest-4.x, candidate-4.x, and fast-4.x are available."
         exit 1
     fi
 
