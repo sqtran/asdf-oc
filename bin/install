@@ -12,13 +12,13 @@ install_oc() {
     local install_path=$3
 
     case $(uname -s) in
-    Darwin) os="macosx" ;;
-    *) os="linux" ;;
+        Darwin) [[ "$install_version" =~ (^[3].+) ]] && os="macosx" || os="mac" ;;
+        *) os="linux" ;;
     esac
 
     case $(uname -m) in
-    x86_64) arch="amd64" ;;
-    *) arch="other" ;;
+        x86_64) arch="amd64" ;;
+        *) arch="other" ;;
     esac
 
     if [ "$arch" = "other" ]; then
