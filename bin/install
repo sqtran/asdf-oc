@@ -16,8 +16,11 @@ install_oc() {
         *) os="linux" ;;
     esac
 
-    case $(uname -m) in
-        x86_64) arch="amd64" ;;
+    # Support arm64, but only on Mac.
+    case $(uname -m -s) in
+        "Darwin x86_64") arch="amd64" ;;
+        "Darwin arm64") arch="amd64" ;;
+        "x86_64") arch="amd64" ;;
         *) arch="other" ;;
     esac
 
