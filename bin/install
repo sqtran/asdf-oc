@@ -20,7 +20,7 @@ install_oc() {
     case $(uname -m -s) in
         "Darwin x86_64") arch="amd64" ;;
         "Darwin arm64") arch="amd64" ;;
-        "x86_64") arch="amd64" ;;
+        "Linux x86_64") arch="amd64" ;;
         *) arch="other" ;;
     esac
 
