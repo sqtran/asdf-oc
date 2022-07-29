@@ -15,3 +15,8 @@ asdf install oc latest
 ## Use
 
 Check the [asdf](https://github.com/asdf-vm/asdf) README for instructions on how to install and manage versions of oc.
+
+
+## Note
+
+This plugin no longer bundles `kubectl` along with `oc`.  If you need plain vanilla `kubectl`, you'll need to install that asdf-plugin separately.

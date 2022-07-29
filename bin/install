@@ -35,7 +35,7 @@ install_oc() {
     elif [[ "$install_version" =~ (^[4].+)|(^latest$)|(^(latest|stable|candidate|fast)-.+) ]];
     then
         download="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${install_version}/openshift-client-${os}.tar.gz"
-    else 
+    else
         echo "Unknown version, only 3.x, 4.x, stable-4.x, latest-4.x, candidate-4.x, and fast-4.x are available."
         exit 1
     fi
@@ -44,7 +44,8 @@ install_oc() {
         mkdir -p "${install_path}/bin"
     fi
 
-    curl -fL# -N "${download}" | tar -xz -C "${install_path}/bin"
+    # Per https://github.com/sqtran/asdf-oc/issues/4, users are not wanting to override any existing kubectl installations
+    curl -fL# -N "${download}" | tar -xz -C "${install_path}/bin" --exclude=kubectl
 }
 
 install_oc $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
