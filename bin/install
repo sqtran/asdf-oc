@@ -7,45 +7,54 @@ set -e
 #
 
 install_oc() {
-    local install_type=$1
-    local install_version=$2
-    local install_path=$3
+  local install_type=$1
+  local install_version=$2
+  local install_path=$3
 
-    case $(uname -s) in
-        Darwin) [[ "$install_version" =~ (^[3].+) ]] && os="macosx" || os="mac" ;;
-        *) os="linux" ;;
-    esac
+  case $(uname -s) in
+  Darwin) [[ "$install_version" =~ (^[3].+) ]] && os="macosx" || os="mac" ;;
+  *) os="linux" ;;
+  esac
 
-    # Support arm64, but only on Mac.
-    case $(uname -m -s) in
-        "Darwin x86_64") arch="amd64" ;;
-        "Darwin arm64") arch="amd64" ;;
-        "Linux x86_64") arch="amd64" ;;
-        *) arch="other" ;;
-    esac
+  # Support both x86_64 and arm64 architectures
+  case $(uname -m -s) in
+  "Darwin x86_64") arch="" ;;
+  "Darwin arm64") arch="-arm64" ;;
+  "Linux x86_64") arch="" ;;
+  "Linux aarch64" | "Linux arm64") arch="-aarch64" ;;
+  *) arch="other" ;;
+  esac
 
-    if [ "$arch" = "other" ]; then
-        echo "Unsupported architecture $(uname -m). Only x64 binaries are available."
-        exit
-    fi
+  if [ "$arch" = "other" ]; then
+    echo "Unsupported architecture $(uname -m). Only x64 and arm64 binaries are available."
+    exit 1
+  fi
 
-    if [[ "$install_version" =~ (^[3].+) ]];
-    then
-        download="https://mirror.openshift.com/pub/openshift-v3/clients/${install_version}/${os}/oc.tar.gz"
-    elif [[ "$install_version" =~ (^[4].+)|(^latest$)|(^(latest|stable|candidate|fast)-.+) ]];
-    then
-        download="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${install_version}/openshift-client-${os}.tar.gz"
+  if [[ "$install_version" =~ (^[3].+) ]]; then
+    download="https://mirror.openshift.com/pub/openshift-v3/clients/${install_version}/${os}/oc.tar.gz"
+  elif [[ "$install_version" =~ (^[4].+)|(^latest$)|(^(latest|stable|candidate|fast)-.+) ]]; then
+    # Check if the version is a release channel (e.g., stable-4.20) or an exact version (e.g., 4.14.8)
+    if [[ "$install_version" =~ ^(stable|fast|candidate|latest)(-[0-9]+\.[0-9]+)?$ ]]; then
+      # Channel directories use unversioned filenames
+      download="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${install_version}/openshift-client-${os}${arch}.tar.gz"
     else
-        echo "Unknown version, only 3.x, 4.x, stable-4.x, latest-4.x, candidate-4.x, and fast-4.x are available."
-        exit 1
+      # Exact version directories use versioned filenames
+      download="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${install_version}/openshift-client-${os}${arch}-${install_version}.tar.gz"
     fi
+  else
+    # --- THIS WAS MISSING IN YOUR VERSION ---
+    echo "Unknown version, only 3.x, 4.x, stable-4.x, latest-4.x, candidate-4.x, and fast-4.x are available."
+    exit 1
+  fi
+  # --- END MISSING BLOCK ---
 
-    if [ ! -d "${install_path}/bin" ]; then
-        mkdir -p "${install_path}/bin"
-    fi
+  if [ ! -d "${install_path}/bin" ]; then
+    mkdir -p "${install_path}/bin"
+  fi
 
-    # Per https://github.com/sqtran/asdf-oc/issues/4, users are not wanting to override any existing kubectl installations
-    curl -fL# -N "${download}" | tar -xz -C "${install_path}/bin" --exclude=kubectl
+  # Per https://github.com/sqtran/asdf-oc/issues/4, users are not wanting to override any existing kubectl installations
+  curl -fL# -N "${download}" | tar -xz -C "${install_path}/bin" --exclude=kubectl
 }
 
 install_oc $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
+
