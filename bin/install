@@ -32,7 +32,7 @@ install_oc() {
 
   if [[ "$install_version" =~ (^[3].+) ]]; then
     download="https://mirror.openshift.com/pub/openshift-v3/clients/${install_version}/${os}/oc.tar.gz"
-  elif [[ "$install_version" =~ (^[4].+)|(^latest$)|(^(latest|stable|candidate|fast)-.+) ]]; then
+  elif [[ "$install_version" =~ (^[4-9][0-9]*\..+)|(^latest$)|(^(latest|stable|candidate|fast)-.+) ]]; then
     # Check if the version is a release channel (e.g., stable-4.20) or an exact version (e.g., 4.14.8)
     if [[ "$install_version" =~ ^(stable|fast|candidate|latest)(-[0-9]+\.[0-9]+)?$ ]]; then
       # Channel directories use unversioned filenames
@@ -43,7 +43,7 @@ install_oc() {
     fi
   else
     # --- THIS WAS MISSING IN YOUR VERSION ---
-    echo "Unknown version, only 3.x, 4.x, stable-4.x, latest-4.x, candidate-4.x, and fast-4.x are available."
+    echo "Unknown version, only 3.x, 4.x+, stable-4.x, latest-4.x, candidate-4.x, and fast-4.x are available."
     exit 1
   fi
   # --- END MISSING BLOCK ---
